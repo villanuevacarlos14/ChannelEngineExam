@@ -4,5 +4,5 @@ namespace Domain.Interface;
 
 public interface IOrderRepository
 {
-    Task<InProgress> Get(Expression<Func<InProgress, bool>> expression);
+    Task<InProgressOrders> GetInProgress();
 }

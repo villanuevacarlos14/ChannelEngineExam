@@ -17,7 +17,7 @@ public class OrderRepository : IOrderRepository
         _consoleConfiguration = consoleConfiguration;
     }
 
-    public async Task<InProgress> Get(Expression<Func<InProgress, bool>> expression)
+    public async Task<InProgressOrders> GetInProgress()
     {
         var (_, apiKey) = _consoleConfiguration;
         var request = new RestRequest($"/api/v2/orders?apikey={apiKey}&statuses=IN_PROGRESS", Method.Get);
@@ -29,6 +29,6 @@ public class OrderRepository : IOrderRepository
             throw new Exception();
         }
         
-        return JsonConvert.DeserializeObject<InProgress>(response.Content);
+        return JsonConvert.DeserializeObject<InProgressOrders>(response.Content);
     }
 }

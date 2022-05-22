@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using Domain;
 using Domain.Configuration;
 using Domain.Interface;
 using Infrastructure;
@@ -26,7 +27,7 @@ var provider = serviceScope.ServiceProvider;
 var orderRepository = provider.GetRequiredService<IOrderRepository>();
 var productRepository = provider.GetRequiredService<IProductRepository>();
 
-var data = await orderRepository.Get(x => true);
+var data = await InProgressOrders.CreateAsync(orderRepository);
 var top5 = data.GetTop5SoldProducts();
 foreach (var line in top5)
 {

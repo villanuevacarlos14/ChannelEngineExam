@@ -1,14 +1,25 @@
+using Domain.Configuration;
+using Domain.Interface;
+using Infrastructure;
+using RestSharp;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton(new ConsoleConfiguration(builder.Configuration["ChannelEngineConf:ApiUrl"],
+    builder.Configuration["ChannelEngineConf:ApiKey"]));
+builder.Services.AddTransient(x => new RestClient(builder.Configuration["ChannelEngineConf:ApiUrl"]));
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
@@ -20,6 +31,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapRazorPages();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
