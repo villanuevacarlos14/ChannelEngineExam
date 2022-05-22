@@ -10,11 +10,13 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IOrderRepository _repository;
+    private readonly IProductRepository _productRepository;
 
-    public HomeController(ILogger<HomeController> logger, IOrderRepository repository)
+    public HomeController(ILogger<HomeController> logger, IOrderRepository repository, IProductRepository productRepository)
     {
         _logger = logger;
         _repository = repository;
+        _productRepository = productRepository;
     }
 
     public async Task<IActionResult> Index()
@@ -22,6 +24,14 @@ public class HomeController : Controller
         var inProgressOrders = await InProgressOrders.CreateAsync(_repository);
         
         return View(inProgressOrders);
+    }
+
+
+    public async Task<IActionResult> UpdateOrder([FromQuery]string merchantProductNo)
+    {
+        var line = new Line(merchantProductNo, "","",0);
+        await line.Product.UpdateProductStock(25, _productRepository);
+        return RedirectToAction("Index");
     }
 
     public IActionResult Privacy()

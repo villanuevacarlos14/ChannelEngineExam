@@ -3,21 +3,36 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+@if (Model != null)
+{
+    <table class="table table-striped table-dark">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>GTIN</th>
+            <th>Total Quantity</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var line in Model?.GetTop5SoldProducts())
+        {
+            <tr>
 
-<table class="table table-striped table-dark">
-  @foreach (var line in Model.GetTop5SoldProducts())
-  {
-      <tr>
-          
-          <td>
-              @line.Description
-          </td>
-          <td>
-              @line.Gtin
-          </td>
-          <td>
-              @line.Quantity
-          </td>
-      </tr>
-  }
-</table>
+                <td>
+                    @line.Description
+                </td>
+                <td>
+                    @line.Gtin
+                </td>
+                <td>
+                    @line.Quantity
+                </td>
+                <td>
+                   @Html.ActionLink("Update stock to 25","UpdateOrder","Home", new {merchantProductNo = @line.MerchantProductNo})
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

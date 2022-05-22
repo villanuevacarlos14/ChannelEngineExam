@@ -11,7 +11,7 @@ public class Line
         Quantity = quantity;
     }
 
-  
+
     public string MerchantProductNo { get; private set; }
 
     public Product Product {
